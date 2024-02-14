@@ -1,29 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/12 21:02:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/14 13:15:29 by vnicoles         ###   ########.fr       */
+/*   Created: 2024/02/14 13:52:38 by vnicoles          #+#    #+#             */
+/*   Updated: 2024/02/14 14:06:52 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-void	ft_memcpy(void *dest, void *src, size_t n)
+size_t	ft_strlcpy(char *dest, const char *src, size_t destsize)
 {
-	int		i;
-	char	*src_char;
-	char	*dest_char;
+	int	offset;
 
-	i = 0;
-	*src_char = (char *)src;
-	*dest_char = (char *)dest;
-	while (i < n)
+	offset = 0;
+	if (destsize > 0)
 	{
-		dest_char[i] = src_char[i];
-		i++;
+		while (*(src + offset) != '\0')
+		{
+			if (offset == destsize)
+			{
+				offset--;
+				break ;
+			}
+			*(dest + offset) = *(src + offset);
+			offset++;
+		}
 	}
+	*(dest + offset) = '\0';
+	while (*(src + offset) != '\0')
+		offset++;
+	return (offset);
 }
