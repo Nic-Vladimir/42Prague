@@ -6,24 +6,27 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 21:02:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/14 13:15:29 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 23:38:26 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
-void	ft_memcpy(void *dest, void *src, size_t n)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	int		i;
-	char	*src_char;
-	char	*dest_char;
+	size_t		i;
+	char		*src_char;
+	char		*dest_char;
 
+	if (dest == (void *)0 && src == (void *)0)
+		return (dest);
 	i = 0;
-	*src_char = (char *)src;
-	*dest_char = (char *)dest;
+	src_char = (char *)src;
+	dest_char = (char *)dest;
 	while (i < n)
 	{
 		dest_char[i] = src_char[i];
 		i++;
 	}
+	return (dest);
 }

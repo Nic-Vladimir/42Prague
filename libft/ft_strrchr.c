@@ -6,26 +6,28 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 14:01:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/26 14:31:42 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 23:56:56 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
-char	*ft_strrchar(const char *s, int c)
+char	*ft_strrchr(const char *s, int c)
 {
-	int		i;
-	char	*last;
+	unsigned int	i;
+	char			*res;
+	char			cc;
 
+	cc = (char) c;
+	res = NULL;
 	i = 0;
-	last = NULL;
-	while (s[i] != '\0')
+	while (s[i])
 	{
-		if (s[i] == c)
-		{
-			last = &s[i];
-		}
+		if (s[i] == cc)
+			res = (char *) &s[i];
 		i++;
 	}
-	return (last);
+	if (s[i] == cc)
+		res = (char *) &s[i];
+	return (res);
 }

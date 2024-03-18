@@ -6,36 +6,36 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 17:30:11 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/26 17:39:58 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 23:14:28 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
-int	ft_atoi(const char *nptr)
+int	ft_atoi(const char *str)
 {
 	int	result;
 	int	sign;
 
 	result = 0;
 	sign = 1;
-	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
+	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
 	{
-		nptr++;
+		str++;
 	}
-	if (*nptr == '-')
+	if (*str == '-')
 	{
 		sign = -1;
-		nptr++;
+		str++;
 	}
-	else if (*nptr == '+')
+	else if (*str == '+')
 	{
-		nptr++;
+		str++;
 	}
-	while (*nptr >= '0' && *nptr <= '9')
+	while (*str >= '0' && *str <= '9')
 	{
-		result = result * 10 + (*nptr - '0');
-		nptr++;
+		result = result * 10 + (*str - '0');
+		str++;
 	}
 	return (sign * result);
 }

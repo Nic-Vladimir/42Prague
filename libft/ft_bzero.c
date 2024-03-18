@@ -6,19 +6,19 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 21:12:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/14 13:32:18 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 19:45:49 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 void	ft_bzero(void *s, size_t n)
 {
 	char	*p;
-	char	i;
+	size_t	i;
 
 	i = 0;
-	*p = (char *)s;
+	p = (char *)s;
 	while (i < n)
 	{
 		*p = 0;

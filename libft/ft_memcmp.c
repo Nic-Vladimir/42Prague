@@ -6,11 +6,11 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:15:30 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/26 16:29:11 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 19:01:38 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {

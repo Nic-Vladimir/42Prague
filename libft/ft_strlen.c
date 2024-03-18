@@ -10,17 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
-int	ft_strlen(char *a)
+size_t	ft_strlen(const char *a)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (*a != '\0')
-	{
+	while (a[i])
 		i++;
-		a++;
-	}
 	return (i);
 }

@@ -6,32 +6,23 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 13:52:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/14 14:06:52 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 22:34:38 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t destsize)
 {
-	int	offset;
+	size_t	src_len;
 
-	offset = 0;
-	if (destsize > 0)
+	src_len = ft_strlen(src);
+	if (src_len + 1 < destsize)
+		ft_memcpy(dest, src, src_len + 1);
+	else if (destsize != 0)
 	{
-		while (*(src + offset) != '\0')
-		{
-			if (offset == destsize)
-			{
-				offset--;
-				break ;
-			}
-			*(dest + offset) = *(src + offset);
-			offset++;
-		}
+		ft_memcpy(dest, src, destsize - 1);
+		dest[destsize - 1] = '\0';
 	}
-	*(dest + offset) = '\0';
-	while (*(src + offset) != '\0')
-		offset++;
-	return (offset);
+	return (src_len);
 }

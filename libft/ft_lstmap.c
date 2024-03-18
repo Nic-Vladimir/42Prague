@@ -1,34 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/14 14:14:16 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/03/18 00:29:19 by vnicoles         ###   ########.fr       */
+/*   Created: 2024/03/17 18:28:24 by vnicoles          #+#    #+#             */
+/*   Updated: 2024/03/18 00:30:21 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *dest, const char *src, size_t destsize)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	size_t	dest_len;
-	size_t	src_len;
-	size_t	i;
+	t_list	*new_list;
+	t_list	*new_node;
 
-	dest_len = ft_strlen(dest);
-	src_len = ft_strlen(src);
-	i = dest_len;
-	while (i < destsize - 1 && src[i - dest_len] && i < destsize)
+	if (!lst || !f || !del)
+		return (NULL);
+	new_list = NULL;
+	while (lst)
 	{
-		dest[i] = src[i - dest_len];
-		i++;
+		new_node = ft_lstnew(f(lst->content));
+		if (!new_node)
+		{
+			ft_lstclear(&new_list, del);
+			return (NULL);
+		}
+		if (!new_list)
+			new_list = new_node;
+		else
+			ft_lstadd_back(&new_list, new_node);
+		lst = lst->next;
 	}
-	dest[i] = '\0';
-	if (dest_len > destsize)
-		return (destsize + src_len);
-	else
-		return (dest_len + src_len);
+	return (new_list);
 }

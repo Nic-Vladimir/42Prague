@@ -6,11 +6,11 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 13:21:05 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/26 13:49:01 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 17:52:29 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 int	ft_tolower(int c)
 {

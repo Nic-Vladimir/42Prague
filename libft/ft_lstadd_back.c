@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/14 14:14:16 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/03/18 00:29:19 by vnicoles         ###   ########.fr       */
+/*   Created: 2024/03/17 18:22:45 by vnicoles          #+#    #+#             */
+/*   Updated: 2024/03/18 00:38:55 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *dest, const char *src, size_t destsize)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	size_t	dest_len;
-	size_t	src_len;
-	size_t	i;
+	t_list	*last;
 
-	dest_len = ft_strlen(dest);
-	src_len = ft_strlen(src);
-	i = dest_len;
-	while (i < destsize - 1 && src[i - dest_len] && i < destsize)
+	last = ft_lstlast(*lst);
+	if (!lst || !new)
+		return ;
+	if (!last)
 	{
-		dest[i] = src[i - dest_len];
-		i++;
+		*lst = new;
+		return ;
 	}
-	dest[i] = '\0';
-	if (dest_len > destsize)
-		return (destsize + src_len);
-	else
-		return (dest_len + src_len);
+	last->next = new;
 }

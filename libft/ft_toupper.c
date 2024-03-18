@@ -6,11 +6,11 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 13:07:05 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/02/26 13:48:37 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/17 19:04:35 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 int	ft_toupper(int c)
 {
@@ -20,14 +20,3 @@ int	ft_toupper(int c)
 	}
 	return (c);
 }
-
-// int	main(void)
-// {
-// 	int	c;
-// 	int	answer;
-
-// 	c = 'k';
-// 	answer = ft_toupper(c);
-// 	write(1, &answer, 1);
-// 	return (0);
-// }
