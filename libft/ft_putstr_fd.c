@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:37:44 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/03/18 01:14:49 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/18 16:09:39 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void	ft_putstr_fd(char *str, int fd)
 	int	i;
 
 	i = 0;
-	if (!str)
-		return ;
 	while (str[i])
 	{
 		write(fd, &str[i], 1);

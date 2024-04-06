@@ -45,7 +45,7 @@ BSRCS = ft_lstadd_back.c \
 OBJS	= $(SRCS:.c=.o)
 BOBJS	= $(BSRCS:.c=.o)
 
-CC		= gcc
+CC		= cc
 RM		= rm -f
 CFLAGS	= -Wall -Wextra -Werror
 

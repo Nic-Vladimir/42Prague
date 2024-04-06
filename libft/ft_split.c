@@ -6,11 +6,13 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:38:53 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/03/18 01:07:28 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/20 13:00:43 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+// 
 
 static int	ft_word_count(const char *str, char c);
 static char	*fill_word(const char *str, int start, int end);
@@ -57,7 +59,7 @@ static void	*ft_free(char **strs, int count)
 	int	i;
 
 	i = 0;
-	while (1 < count)
+	while (i < count)
 	{
 		free(strs[i]);
 		i++;

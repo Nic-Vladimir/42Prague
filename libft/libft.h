@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:18:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/03/17 23:12:30 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/03/18 19:32:44 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <stdarg.h>
+# include <limits.h>
 
 typedef struct s_list
 {
