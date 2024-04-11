@@ -10,23 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <stdio.h>
+#include <unistd.h>
 #include <stdarg.h>
+#include <string.h>
 
 int	ft_printf(const char *format, ...)
 {
 	va_list			args;
 	unsigned int	chars;
+    unsigned int    left_align;
+    unsigned int    pad_with_0;
+    unsigned int    alternate_form;
+    unsigned int    i;
+    unsigned int    plus_sign;
+    unsigned int    space_for_positives;
+    unsigned int    field_width;
+    int             floating_point_precision;
+    int             to_print;
+    int             num;
 
 	i = 0;
 	chars = 0;
 	va_start(args, format);
 	while (*format)
 	{
-		if (format[i] != '%')
+		if (*format != '%')
 		{
 			chars++;
-			ft_putchar(*format);
+			putchar(*format);
+            //putchar('\n');
 			format++;
 		}
 		else
@@ -63,23 +76,49 @@ int	ft_printf(const char *format, ...)
 				}
 			}
 			if (*format == 'c')
-				//PrintCharacter
-			else if (*format == 's')
-				//PrintString
-			else if (*format == 'p')
-				//PrintPointerInHexadecimal
-			if (*format == 'd')
-				//PrintDecimalNumber
-			if (*format == 'i')
-				//PrintIntegerInBase10
-			if (*format == 'u')
-				//PrintInsignedDecimalNumber
-			if (*format == 'x')
-				//PrintHexadecimalNumberLowercase
-			if (*format == 'X')
-				//PrintHexadecimalNumberUppercase
-			if (*format == '%')
-				//Print%
+            {
+			    to_print = va_arg(args, int);
+                putchar(to_print);
+                chars++;
+                format++;
+            }
+            //else if (*format == 's')
+			//	//PrintString
+            //else if (*format == 'p')
+			//	//PrintPointerInHexadecimal
+            else if (*format == 'd')
+			{
+                num = va_arg(args, int);
+                char num_str[12];
+                snprintf(num_str, sizeof(num_str), "%d", num);
+                int length = strlen(num_str);
+                write(1, num_str, length);
+                chars += length;
+                format++;
+            }
+			//else if (*format == 'i')
+			//	//PrintIntegerInBase10
+			//else if (*format == 'u')
+			//	//PrintInsignedDecimalNumber
+			//else if (*format == 'x')
+			//	//PrintHexadecimalNumberLowercase
+			//else if (*format == 'X')
+			//	//PrintHexadecimalNumberUppercase
+			//else if (*format == '%')
+			//	//Print%
 		}
 	}
+    va_end(args);
+    return (chars);
+}
+
+int main(void)
+{
+    int printed_chars;
+    int age;
+
+    age = 24;
+    printed_chars = ft_printf("Hello! My name is %c, I am %d years old and you are terminated!\n*BANG*\n", 'X', age);
+    ft_printf("That was %d characters", printed_chars);
+    return (0);
 }
