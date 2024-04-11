@@ -1,8 +1,12 @@
 #include <stdio.h>
 
-int main()
+void main()
 {
-    int result = printf("Am multe mere. Mai exact atatea % +d e plin de mere \n", -123);
+	unsigned int	num;
+
+	num = -122;
+    int result = printf("I have %i apples\n", num);
     
     printf("%d characters were written", result);
+	//ft_putchar_fd('X', 1);
 }

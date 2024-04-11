@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 16:56:03 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/04/06 20:23:29 by vnicoles         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   ft_printf.c										:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: vnicoles <vnicoles@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/04/06 16:56:03 by vnicoles		  #+#	#+#			 */
+/*   Updated: 2024/04/11 14:48:39 by vnicoles		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include <stdio.h>
@@ -15,20 +15,97 @@
 #include <stdarg.h>
 #include <string.h>
 
+int	count_digits(int num)
+{
+	int	count;
+
+	count = 0;
+	if (num == 0)
+		return (1);
+	while (num != 0)
+	{
+		num /= 10;
+		count++;
+	}
+	return (count);
+}
+
+int	print_char(va_list args)
+{
+	char	character;
+
+	character = va_arg(args, int);
+	ft_putchar_fd(character, 1);
+	return (1);
+}
+
+int	print_string(va_list args)
+{
+	char	*string;
+
+	string = (va_arg(args, char *));
+	ft_putstr_fd(string, 1);
+	return (ft_strlen(string));
+}
+
+int	print_pointer(va_list args)
+{
+	void	*ptr;
+	char	hex_str[20];
+	int		len;
+
+	ptr = va_arg(args, void *);
+	len = sprintf(hex_str, "%p", ptr);
+	ft_putstr_fd(hex_str, 1);
+	return (len);
+}
+
+int	print_unsigned_int(va_list args)
+{
+	unsigned int	num;
+
+	num = va_arg(args, unsigned int);
+	if (num == 0)
+	{
+		ft_putnbr_fd(0, 1);
+		return (0);
+	}
+	if (num < 1)
+		return (-1);
+	ft_putnbr_fd(num, 1);
+	return (count_digits(num));
+}
+
+int	print_hex(va_list args)
+{
+	unsigned int	num;
+
+	num = va_arg(args, unsigned int);
+	if (num == 0)
+	{
+		write (1, '0', 1);
+		return (1);
+	}
+	if (num < 1)
+		return (-1);
+	 
+}
+
 int	ft_printf(const char *format, ...)
 {
 	va_list			args;
 	unsigned int	chars;
-    unsigned int    left_align;
-    unsigned int    pad_with_0;
-    unsigned int    alternate_form;
-    unsigned int    i;
-    unsigned int    plus_sign;
-    unsigned int    space_for_positives;
-    unsigned int    field_width;
-    int             floating_point_precision;
-    int             to_print;
-    int             num;
+	unsigned int	left_align;
+	unsigned int	pad_with_0;
+	unsigned int	alternate_form;
+	unsigned int	i;
+	unsigned int	plus_sign;
+	unsigned int	space_for_positives;
+	unsigned int	field_width;
+	int				floating_point_precision;
+	int				to_print;
+	int				num;
+	char*			num_str;
 
 	i = 0;
 	chars = 0;
@@ -38,8 +115,7 @@ int	ft_printf(const char *format, ...)
 		if (*format != '%')
 		{
 			chars++;
-			putchar(*format);
-            //putchar('\n');
+			ft_putchar_fd(*format, 1);
 			format++;
 		}
 		else
@@ -76,49 +152,60 @@ int	ft_printf(const char *format, ...)
 				}
 			}
 			if (*format == 'c')
-            {
-			    to_print = va_arg(args, int);
-                putchar(to_print);
-                chars++;
-                format++;
-            }
-            //else if (*format == 's')
-			//	//PrintString
-            //else if (*format == 'p')
-			//	//PrintPointerInHexadecimal
-            else if (*format == 'd')
 			{
-                num = va_arg(args, int);
-                char num_str[12];
-                snprintf(num_str, sizeof(num_str), "%d", num);
-                int length = strlen(num_str);
-                write(1, num_str, length);
-                chars += length;
-                format++;
-            }
-			//else if (*format == 'i')
-			//	//PrintIntegerInBase10
-			//else if (*format == 'u')
-			//	//PrintInsignedDecimalNumber
-			//else if (*format == 'x')
+				chars += print_char(args);
+				format++;
+			}
+			else if (*format == 's')
+			{
+				chars += print_string(args);
+				format++;
+			}
+			else if (*format == 'p')
+			{
+				chars += print_pointer(args);
+				format++;
+			}
+			else if ((*format == 'd') || (*format == 'i'))
+			{
+				num = va_arg(args, int);
+				ft_putnbr_fd(num, 1);
+				chars += count_digits(num);
+				format++;
+			}
+			else if (*format == 'u')
+			{
+				chars += print_unsigned_int(args);
+				format++;
+			}
+			else if (*format == 'x')
+			{
+				chars += print_hex(args);
+				format++;
+			}
 			//	//PrintHexadecimalNumberLowercase
 			//else if (*format == 'X')
 			//	//PrintHexadecimalNumberUppercase
-			//else if (*format == '%')
-			//	//Print%
+			else if (*format == '%')
+			{
+				ft_putchar_fd('%', 1);
+				chars += 1;
+				format++;
+			}
 		}
 	}
-    va_end(args);
-    return (chars);
+	va_end(args);
+	return (chars);
 }
 
-int main(void)
+int	main(void)
 {
-    int printed_chars;
-    int age;
+	int				printed_chars;
+	unsigned int	age;
+	char			*point;
 
-    age = 24;
-    printed_chars = ft_printf("Hello! My name is %c, I am %d years old and you are terminated!\n*BANG*\n", 'X', age);
-    ft_printf("That was %d characters", printed_chars);
-    return (0);
+	age = -24;
+	printed_chars = ft_printf("Hello! My name is %c, and you are %s. I am %u years old and you are %p !\n*BANG*\n", 'X', "stupid", age, point);
+	ft_printf("That was %d characters", printed_chars);
+	return (0);
 }
