@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   ft_printf.c										:+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: vnicoles <vnicoles@student.42.fr>		  +#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2024/04/06 16:56:03 by vnicoles		  #+#	#+#			 */
-/*   Updated: 2024/04/11 14:48:39 by vnicoles		 ###   ########.fr	   */
-/*																			*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/06 16:56:03 by vnicoles          #+#    #+#             */
+/*   Updated: 2024/04/12 19:35:07 by vnicoles         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
@@ -76,19 +76,41 @@ int	print_unsigned_int(va_list args)
 	return (count_digits(num));
 }
 
-int	print_hex(va_list args)
+int	convert_to_hexadecimal(unsigned int num, char x, int written_chars)
+{
+	int		remainder;
+	int		i;
+	char	hex_digit;
+
+	if (num != 0)
+	{
+		remainder = num % 16;
+		written_chars += convert_to_hexadecimal(num / 16, x, written_chars);
+		if (remainder <= 9)
+			hex_digit = remainder + '0';
+		else if (x == 'X')
+			hex_digit = remainder + 55;
+		else
+			hex_digit = remainder + 87;
+		ft_putchar_fd(hex_digit, 1);
+		written_chars++;
+	}
+	return (written_chars);
+}
+
+int	print_hexadecimal(va_list args, char x)
 {
 	unsigned int	num;
+	unsigned int	written_chars;
 
+	written_chars = 0;
 	num = va_arg(args, unsigned int);
 	if (num == 0)
 	{
-		write (1, '0', 1);
+		ft_putnbr_fd('0', 1);
 		return (1);
 	}
-	if (num < 1)
-		return (-1);
-	 
+	return (convert_to_hexadecimal(num, x, written_chars));
 }
 
 int	ft_printf(const char *format, ...)
@@ -178,14 +200,11 @@ int	ft_printf(const char *format, ...)
 				chars += print_unsigned_int(args);
 				format++;
 			}
-			else if (*format == 'x')
+			else if ((*format == 'x') || (*format == 'X'))
 			{
-				chars += print_hex(args);
+				chars += print_hexadecimal(args, *format);
 				format++;
 			}
-			//	//PrintHexadecimalNumberLowercase
-			//else if (*format == 'X')
-			//	//PrintHexadecimalNumberUppercase
 			else if (*format == '%')
 			{
 				ft_putchar_fd('%', 1);
@@ -204,8 +223,8 @@ int	main(void)
 	unsigned int	age;
 	char			*point;
 
-	age = -24;
-	printed_chars = ft_printf("Hello! My name is %c, and you are %s. I am %u years old and you are %p !\n*BANG*\n", 'X', "stupid", age, point);
+	age = 24;
+	printed_chars = ft_printf("Hello! My name is %c, and you are %s. I am %u years old and you are %p !\n*BANG* Here's a number for you, smarty-pants: %X\n", 'X', "stupid", age, point, 987);
 	ft_printf("That was %d characters", printed_chars);
 	return (0);
 }

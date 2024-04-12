@@ -1,12 +1,20 @@
 #include <stdio.h>
+#include <unistd.h> 
 
-void main()
+int	print_formatted(int num, char x, int chars)
 {
-	unsigned int	num;
 
-	num = -122;
-    int result = printf("I have %i apples\n", num);
-    
-    printf("%d characters were written", result);
-	//ft_putchar_fd('X', 1);
+}
+
+int	main(void)
+{
+	int		a;
+	int		chars;
+	int		written;
+
+	a = 2;
+	chars = 0;
+	written = convert_to_hexadecimal(a, 'X', chars);
+	printf("\nWritten %d characters\n", written);
+	return (0);
 }
