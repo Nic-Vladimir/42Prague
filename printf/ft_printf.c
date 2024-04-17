@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 16:56:03 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/04/12 19:35:07 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/04/17 18:17:00 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@
 int	count_digits(int num)
 {
 	int	count;
+	int	copy;
 
+	copy = num;
 	count = 0;
-	if (num == 0)
+	if (copy == 0)
 		return (1);
-	while (num != 0)
+	while (copy != 0)
 	{
-		num /= 10;
+		copy /= 10;
 		count++;
 	}
 	return (count);
@@ -113,16 +115,80 @@ int	print_hexadecimal(va_list args, char x)
 	return (convert_to_hexadecimal(num, x, written_chars));
 }
 
+int	print_formatted_int(int num, int width_field,
+						unsigned int left_align_or_0pad,
+						unsigned int plus_sign_or_space)
+{
+	unsigned int	len;
+	unsigned int	chars;
+
+	chars = 0;
+	len = count_digits(num);
+	printf("plus_sign_or_space = %i\n num = %d\n", plus_sign_or_space, num);
+	if (width_field > len)
+	{
+		if (left_align_or_0pad == 1)
+		{
+			if ((plus_sign_or_space == 1) && (num >= 0))
+			{
+				ft_putchar_fd('+', 1);
+				width_field--;
+				chars++;
+			}
+			ft_putnbr_fd(num, 1);
+			width_field -= len;
+			chars += len;
+			while (width_field > 0)
+			{
+				ft_putchar_fd(' ', 1);
+				chars++;
+				width_field--;
+			}
+			return (chars);
+		}
+		while ((left_align_or_0pad == 2) && (width_field > 0))
+		{
+			ft_putchar_fd('0', 1);
+			width_field--;
+			chars++;
+			if (width_field - len == 0)
+			{
+				ft_putnbr_fd(num, 1);
+				width_field -= len;
+				chars += len;
+			}
+		}
+		return (chars);
+		while (width_field > len)
+		{
+			ft_putchar_fd(' ', 1);
+			width_field -= len;
+			chars += len;
+			if (width_field - len == 0)
+			{
+				ft_putnbr_fd(num, 1);
+				width_field -= len;
+				chars += len;
+			}
+		}
+		return (chars);
+	}
+	else
+	{
+		ft_putnbr_fd(num, 1);
+		chars = len;
+	}
+	return (chars);
+}
+
 int	ft_printf(const char *format, ...)
 {
 	va_list			args;
 	unsigned int	chars;
-	unsigned int	left_align;
-	unsigned int	pad_with_0;
+	unsigned int	left_align_or_0pad;
 	unsigned int	alternate_form;
 	unsigned int	i;
-	unsigned int	plus_sign;
-	unsigned int	space_for_positives;
+	unsigned int	plus_sign_or_space;
 	unsigned int	field_width;
 	int				floating_point_precision;
 	int				to_print;
@@ -147,17 +213,28 @@ int	ft_printf(const char *format, ...)
 				|| *format == ' ' || *format == '+')
 			{
 				if (*format == '-')
-					left_align = 1;
+					left_align_or_0pad = 1;
 				if (*format == '0')
-					pad_with_0 = 1;
+				{
+					if (left_align_or_0pad == 1)
+						left_align_or_0pad = 1;
+					else
+						left_align_or_0pad = 2;
+				}
+				if (*format == '+')
+					plus_sign_or_space = 1;
+				if (*format == ' ')
+				{
+					if (plus_sign_or_space == 1)
+						plus_sign_or_space = 1;
+					else
+						plus_sign_or_space = 2;
+				}
 				if (*format == '#')
 					alternate_form = 1;
-				if (*format == '+')
-					plus_sign = 1;
-				if (*format == ' ')
-					space_for_positives = 1;
 				format++;
 			}
+			field_width = 0;
 			while (*format >= '0' && *format <= '9')
 			{
 				field_width = field_width * 10 + (*format - '0');
@@ -191,8 +268,7 @@ int	ft_printf(const char *format, ...)
 			else if ((*format == 'd') || (*format == 'i'))
 			{
 				num = va_arg(args, int);
-				ft_putnbr_fd(num, 1);
-				chars += count_digits(num);
+				chars += print_formatted_int(num, field_width, left_align_or_0pad, plus_sign_or_space);
 				format++;
 			}
 			else if (*format == 'u')
@@ -224,7 +300,7 @@ int	main(void)
 	char			*point;
 
 	age = 24;
-	printed_chars = ft_printf("Hello! My name is %c, and you are %s. I am %u years old and you are %p !\n*BANG* Here's a number for you, smarty-pants: %X\n", 'X', "stupid", age, point, 987);
+	printed_chars = ft_printf("Hello! My name is %c, and you are %s. I am %+5i years old and you are %p !\n*BANG* Here's a number for you, smarty-pants: %X\n", 'X', "stupid", age, point, 987);
 	ft_printf("That was %d characters", printed_chars);
 	return (0);
 }
