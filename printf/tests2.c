@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   tests2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 13:36:08 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/05/23 01:27:40 by vnicoles         ###   ########.fr       */
+/*   Created: 2024/05/18 20:07:05 by vnicoles          #+#    #+#             */
+/*   Updated: 2024/05/19 08:52:47 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <limits.h>
 
-char	*ft_strchr(const char *s, int c)
+int	main(void)
 {
-	int		i;
-	char	cc;
-
-	cc = (char) c;
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == cc)
-			return ((char *) &s[i]);
-		i++;
-	}
-	if (s[i] == cc)
-		return ((char *) &s[i]);
-	return (NULL);
+	printf("%x\n", 0);
+	return (0);
 }

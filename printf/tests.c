@@ -1,56 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tests.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/12 17:41:29 by vnicoles          #+#    #+#             */
+/*   Updated: 2024/05/12 17:54:19 by vnicoles         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
-#include <unistd.h> 
-
-int	print_formatted_int(int num, int width_field,
-						unsigned int left_align_or_0pad,
-						unsigned int plus_sign_or_space)
-{
-	unsigned int	len;
-	unsigned int	chars;
-
-	chars = 0;
-	len = count_digits(num);
-	while (width_field > 0)
-	{
-		if (left_align_or_0pad == 2)
-			ft_putchar_fd("0", 1);
-		else if (left_align_or_0pad == 1)
-		{
-			ft_putnbr_fd(num, 1);
-			width_field -= (len - 1);
-			chars += (len - 1);
-		}
-		else
-			ft_putchar_fd(" ", 1);
-		width_field -= 1;
-		chars++;
-		if (width_field - len == 0)
-		{
-			ft_putnbr_fd(num, 1);
-			width_field -= len;
-			chars += len;
-		}
-	}
-	return (chars);
-}
-
-int print_formatted_char(char x,)
-{
-
-}
-
-int print_formatted_hexadecimal(int num, unsigned int alternate_form)
-
+#include <unistd.h>
+#include <stdlib.h>
 
 int	main(void)
 {
-	int		a;
-	int		chars;
-	int		written;
+	typedef struct node
+	{
+		int	val;
+		struct node * next;
+	} node_t;
+	
+	node_t * head = NULL;
+	head = (node_t *) malloc(sizeof(node_t));
+	if (head == NULL) {
+		return (1);
+	}
+	head->val = 1;
+	head->next = NULL;
+	
+	void print_list(node_t * head) {
+		node_t * current = head;
 
-	a = 2;
-	chars = 0;
-	written = convert_to_hexadecimal(a, 'X', chars);
-	printf("\nWritten %d characters\n", written);
+		while (current != NULL) {
+			printf("%d\n", current->val);
+			current = current->next;
+		}
+	}
+
+	print_list(head);
+	
 	return (0);
 }

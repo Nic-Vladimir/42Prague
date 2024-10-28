@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 20:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/10/28 21:27:36 by vnicoles         ###   ########.fr       */
+/*   Updated: 2024/10/28 22:11:47 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,31 @@ int	ft_stack_size(t_stack *stack)
 
 
 // Find smallest number
+int	ft_min(t_stack *stack)
+{
+	int	i;
+
+	i = stack->nbr;
+	while (stack)
+	{
+		if (stack->nbr < i)
+			i = stack->nbr;
+		stack = stack->next;
+	}
+	return (i);
+}
+
+// Find biggest number
+int ft_max(t_stack *stack)
+{
+	int	i;
+
+	i = stack->nbr;
+	while (stack)
+	{
+		if (stack->nbr > i)
+			i = stack->nbr;
+		stack = stack->next;
+	}
+	return (i);
+}
