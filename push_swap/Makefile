@@ -1,3 +1,16 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/11/05 17:21:55 by vnicoles          #+#    #+#              #
+#    Updated: 2024/11/10 20:15:52 by vnicoles         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+
 NAME = push_swap
 CC = gcc
 RM = rm -f
@@ -7,40 +20,35 @@ OBJ_DIR = obj/
 BONUS = checker
 SRC_DIR = srcs/
 
-SRC_1 =srcs/push_swap/push_swap.c \
+SRC_1 =srcs/push_swap.c \
 
-SRC_2 =	srcs/push_swap/algorithm.c \
-		srcs/push_swap/ft_add_back.c \
-		srcs/push_swap/ft_stack_new.c \
-		srcs/push_swap/ft_check_utils.c \
-		srcs/push_swap/ft_parse.c \
-		srcs/push_swap/solver_utils_ab.c \
-		srcs/push_swap/solver_utils_ba.c \
-		srcs/push_swap/ft_rotate_and_push.c \
-		srcs/push_swap/operations.c \
-		srcs/push_swap/operations_2.c \
-		srcs/push_swap/operations_3.c \
-		srcs/push_swap/ft_check_dup.c \
-		srcs/push_swap/ft_check_sorted.c \
-		srcs/push_swap/ft_error_print.c \
-		srcs/push_swap/ft_free.c \
-		srcs/push_swap/lst_utils.c \
-		srcs/push_swap/lst_utils_2.c \
-		srcs/push_swap/ft_parse_args_quoted.c \
-		srcs/push_swap/ft_list_args.c \
-		srcs/push_swap/ft_check_args.c \
-		srcs/push_swap/ft_sort_big.c \
-		srcs/push_swap/ft_sort_three.c \
-		srcs/push_swap/ft_rotate_type.c \
-		
-BONUS_SRC = srcs/checker/checker.c \
-			srcs/checker/checker_utils.c \
+SRC_2 =	srcs/algorithm.c \
+		srcs/ft_add_back.c \
+		srcs/ft_stack_new.c \
+		srcs/ft_check_utils.c \
+		srcs/ft_parse.c \
+		srcs/solver_utils_ab.c \
+		srcs/solver_utils_ba.c \
+		srcs/ft_rotate_and_push.c \
+		srcs/operations.c \
+		srcs/operations_2.c \
+		srcs/operations_3.c \
+		srcs/ft_check_dup.c \
+		srcs/ft_check_sorted.c \
+		srcs/ft_error_print.c \
+		srcs/ft_free.c \
+		srcs/lst_utils.c \
+		srcs/lst_utils_2.c \
+		srcs/ft_parse_args_quoted.c \
+		srcs/ft_list_args.c \
+		srcs/ft_check_args.c \
+		srcs/ft_sort_big.c \
+		srcs/ft_sort_three.c \
+		srcs/ft_rotate_type.c \
 			
 
 OBJ_1 = ${SRC_1:.c=.o}
 OBJ_2 = ${SRC_2:.c=.o}
-
-BONUS_OBJ =${BONUS_SRC:.c=.o}
 
 INCLUDE = -L ./libft -lft
 
@@ -51,16 +59,10 @@ ${NAME}: ${OBJ_1} ${OBJ_2}
 	make -C $(LIBFTDIR)
 	${CC} ${FLAGS} ${OBJ_1} ${OBJ_2} -o ${NAME} ${INCLUDE}
 
-${BONUS}: ${OBJ_2} ${BONUS_OBJ} 
-	make -C $(LIBFTDIR)
-	${CC} ${FLAGS} ${BONUS_OBJ} ${OBJ_2} -o ${BONUS} ${INCLUDE}
-
-all: ${NAME} ${BONUS}
-
-bonus: ${BONUS} 
+all: ${NAME}
 
 clean:
-	${RM} ${OBJ_1} ${OBJ_2} ${BONUS_OBJ} ${NAME} ${BONUS}
+	${RM} ${OBJ_1} ${OBJ_2} ${NAME}
 	@cd $(LIBFTDIR) && $(MAKE) clean
 
 fclean: clean
