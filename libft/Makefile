@@ -1,3 +1,14 @@
+MAKEFLAGS += --no-print-directory
+
+# Colors constants
+PURPLE			= \033[38;5;141m
+GREEN			= \033[38;5;46m
+RED				= \033[0;31m
+GREY			= \033[38;5;240m
+RESET			= \033[0m
+BOLD			= \033[1m
+CLEAR			= \r\033[K
+
 SRCS = ft_atoi.c \
 	ft_bzero.c \
 	ft_calloc.c \
@@ -52,35 +63,34 @@ OBJ_DIR       = ./obj/
 OBJS	       = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 BOBJS	       = $(addprefix $(OBJ_DIR), $(BSRCS:.c=.o))
 
-CC		= cc
-RM		= rm -rf
-CFLAGS        = -Wall -Wextra -Werror -I $(INC_DIR)
+CC			= cc
+RM			= rm -rf
+CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 NAME		= libft.a
 
 # Calculate total number of files and create variables for the progress bar
-TOTAL_FILES := $(words $(SRCS) $(BSRCS))
-CURR_FILE := 0
-PERCENT = $(shell echo "$(CURR_FILE) * 100 / $(TOTAL_FILES)" | bc)
-COMPLETE_MSG = "\033[32mComplete!\033[0m"  # Green text
+TOTAL_FILES	= $(words $(SRCS) $(BSRCS))
+CURR_FILE	= 0
+PERCENT		= $(shell echo "$(CURR_FILE) * 100 / $(TOTAL_FILES)" | bc)
 
 # Define the progress bar function (40 chars width)
 define update_progress
-        @$(eval CURR_FILE = $(shell echo "$(CURR_FILE) + 1" | bc))
-        @$(eval PERCENT = $(shell echo "$(CURR_FILE) * 100 / $(TOTAL_FILES)" | bc))
-        @printf "\r\\033[K"
-        @printf "Compiling: ["
-        @printf "%*s" $(shell echo "$(PERCENT) * 40 / 100" | bc) "" | tr ' ' '='
-        @printf "%*s" $(shell echo "40 - ($(PERCENT) * 40 / 100)" | bc) "" | tr ' ' '.'
-        @printf "] %3d%% %s" $(PERCENT)
+		@$(eval CURR_FILE = $(shell echo "$(CURR_FILE) + 1" | bc))
+		@$(eval PERCENT = $(shell echo "$(CURR_FILE) * 100 / $(TOTAL_FILES)" | bc))
+		@printf "\r\\033[K"
+		@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tCompiling... ["
+		@printf "%*s" $(shell echo "$(PERCENT) * 20 / 100" | bc) "" | tr ' ' '='
+		@printf "%*s" $(shell echo "20 - ($(PERCENT) * 20 / 100)" | bc) "" | tr ' ' '.'
+		@printf "] %3d%% %s" $(PERCENT)
 		@printf " %s" $(notdir $<)
 endef
 
 all:		$(OBJ_DIR) $(NAME)
-		@printf "\r\033[KCompiling: ["
-		@printf "%*s" 40 "" | tr ' ' '='
+		@printf "\r\\033[K$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tCompiled  ["
+		@printf "%*s" 20 "" | tr ' ' '='
 		@printf "] "
 		@printf "100%% "
-		@printf $(COMPLETE_MSG)
+		@printf "$(GREEN)Complete!$(RESET)"
 		@printf "\n"
 
 $(OBJ_DIR):
@@ -95,11 +105,11 @@ $(NAME):	$(OBJS) $(BOBJS)
 
 clean:
 		@$(RM) $(OBJ_DIR)
-		@echo "Cleaned object files"
+		@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tRemoved $(BOLD)OBJ$(RESET)\n"
 
 fclean:	clean
 		@$(RM) $(NAME)
-		@echo "Cleaned library"
+		@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tRemoved $(BOLD)libft.a$(RESET)\n"
 
 re:		fclean all
 

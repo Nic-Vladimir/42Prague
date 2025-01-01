@@ -45,21 +45,21 @@ TOTAL_FILES	= $(words $(SERVER_SRC) $(CLIENT_SRC))
 CURR_FILE	= 0
 PERCENT		= $(shell echo "$(CURR_FILE) * 100 / $(TOTAL_FILES)" | bc)
 
-# Define the progress bar function (40 chars width)
+# Define the progress bar function (20 chars width)
 define update_progress
 		@$(eval CURR_FILE = $(shell echo "$(CURR_FILE) + 1" | bc))
 		@$(eval PERCENT = $(shell echo "$(CURR_FILE) * 100 / $(TOTAL_FILES)" | bc))
 		@printf "\r\\033[K"
 		@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tCompiling... ["
-		@printf "%*s" $(shell echo "$(PERCENT) * 40 / 100" | bc) "" | tr ' ' '='
-		@printf "%*s" $(shell echo "40 - ($(PERCENT) * 40 / 100)" | bc) "" | tr ' ' '.'
+		@printf "%*s" $(shell echo "$(PERCENT) * 20 / 100" | bc) "" | tr ' ' '='
+		@printf "%*s" $(shell echo "20 - ($(PERCENT) * 20 / 100)" | bc) "" | tr ' ' '.'
 		@printf "] %3d%% %s" $(PERCENT)
 		@printf " %s" $(notdir $<)
 endef
 
 all:			$(OBJ_DIR) $(SERVER) $(CLIENT)
 		@printf "\r\\033[K$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tCompiled  ["
-		@printf "%*s" 40 "" | tr ' ' '='
+		@printf "%*s" 20 "" | tr ' ' '='
 		@printf "] "
 		@printf "100%% "
 		@printf "$(GREEN)Complete!$(RESET)"
@@ -93,7 +93,7 @@ fclean:
 			@$(RM) $(SERVER) $(CLIENT)
 			@printf "$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tRemoved $(BOLD)server.a$(RESET) and $(BOLD)client.a$(RESET)\n"
 			#@printf "$(CLEAR)$(RESET)$(GREY)────────────────────────────────────────────────────────────────────────────\n"
-			@printf "$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tProject cleaned $(GREEN)successfully$(RESET)"
+			@printf "$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tProject cleaned $(GREEN)successfully$(RESET)\n"
 			#@printf "$(GREY)\n$(RESET)$(GREY)────────────────────────────────────────────────────────────────────────────\n$(RESET)"
 
 re:				fclean all
