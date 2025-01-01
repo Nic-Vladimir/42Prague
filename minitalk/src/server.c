@@ -12,39 +12,53 @@
 
 #include "../inc/minitalk.h"
 
-void ft_handler(int sig)
+static void ft_handler(int sig, siginfo_t *info, void *context)
 {
     static int  bit;
     static char msg[10000];
     static int  i;
 
+	(void)context;
     if (sig == SIGUSR1)
-        msg[i] |= (0x01 << bit);
+        msg[i] |= (1 << bit);
     bit++;
     if (bit == 8)
     {
         if (msg[i] == '\0')
+		{
             ft_printf("%s\n", msg);
-        i++;
-        bit = 0;
+			i = 0;
+			ft_memset(msg, 0, sizeof(msg));
+			kill(info->si_pid, SIGUSR2);
+		}
+		else
+        	i++;
+		bit = 0;
     }
+	kill(info->si_pid, SIGUSR1);
 }
 
 int main(int argc, char **argv)
 {
+	struct sigaction sa;
+
     if (argc != 1)
     {
         ft_printf("Usage: ./server\n");
         return (1);
     }
     (void)argv;
-    ft_printf("Server PID: %d\n", getpid());
 
+	sa.sa_sigaction = ft_handler;
+    sa.sa_flags = SA_SIGINFO;
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
+
+    ft_printf("Server PID: %d\n", getpid());
     while (argc == 1)
     {
-        signal(SIGUSR1, ft_handler);
-        signal(SIGUSR2, ft_handler);
         pause();
     }
+	return (0);
 }
 
