@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 01:04:14 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/06 01:04:14 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/06 08:15:38 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_hook_input(t_fdf *env)
 {
-	mlx_hook(env->win, 2, 0, ft_key_press, env);
+	mlx_key_hook(env->win, ft_key_press, env);
 	mlx_hook(env->win, 17, 0, ft_close_win, env);
 }
 
@@ -24,7 +24,7 @@ int ft_key_press(int key, void *params)
 
 	env = (t_fdf *)params;
 	printf("Key pressed: %d\n", key);
-	if (key == ESCAPE)
+	if (key == ESC)
 		ft_close_win(env);
 	ft_draw(env->map, env);
 	return (0);

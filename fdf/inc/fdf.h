@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 11:02:46 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/04 03:03:56 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/06 08:18:48 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
-# define ESCAPE 27
+# define ESC 65307
 
 typedef struct	s_point
 {
