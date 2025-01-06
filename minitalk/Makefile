@@ -58,7 +58,7 @@ define update_progress
 endef
 
 all:			$(OBJ_DIR) $(SERVER) $(CLIENT)
-		@printf "\r\\033[K$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tCompiled  ["
+		@printf "\r\033[K$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)Minitalk$(RESET)]: \tCompiled  ["
 		@printf "%*s" 20 "" | tr ' ' '='
 		@printf "] "
 		@printf "100%% "
