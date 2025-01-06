@@ -15,6 +15,7 @@
 void	ft_hook_input(t_fdf *env)
 {
 	mlx_hook(env->win, 2, 0, ft_key_press, env);
+	mlx_hook(env->win, 17, 0, ft_close_win, env);
 }
 
 int ft_key_press(int key, void *params)

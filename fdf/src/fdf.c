@@ -82,5 +82,4 @@ int	main(int argc, char **argv)
 	ft_hook_input(env);
 	ft_draw(env->map, env);
 	mlx_loop(env->mlx);
-	return (0);
 }
