@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 10:19:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/12/05 12:18:16 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:10:26 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_point	ft_projection(int x, int y, t_fdf *env)
 		point.color = get_default_color(env->map->array[y][x][0], env->map);
 	point.x = x * env->camera->zoom;
 	point.y = y * env->camera->zoom;
-	point.z *= env->camera->zoom / env->camera->z_height;
+	point.z *= env->camera->zoom / env->camera->z_height / 2;
 	point.x -= (env->map->width * env->camera->zoom) / 2;
 	point.y -= (env->map->height * env->camera->zoom) / 2;
 	ft_rotate_x(&point.y, &point.z, env->camera->x_angle);

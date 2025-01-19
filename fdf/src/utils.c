@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:24:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/12/09 17:03:51 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:58:18 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,9 @@ void	ft_get_z_min_max(t_map *map, int n)
 }
 
 
-void	ft_return_error(char *err_msg, int system_function)
+void	ft_return_error(char *err_msg)
 {
-	if (!system_function)
-		ft_putendl_fd(err_msg, STDERR_FILENO);
-	else
-		perror(err_msg);
+	ft_printf("%s\n", err_msg);
 	exit(-1);
 }
 

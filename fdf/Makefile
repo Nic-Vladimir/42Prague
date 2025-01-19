@@ -24,8 +24,8 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= fdf
-CC			= gcc
-CFLAGS		= -g -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 LIBS		= $(MLX_LIB) $(LIBFT_LIB) -lXext -lX11 -lm
 
 # --- Paths ---
@@ -69,18 +69,18 @@ define update_progress
 endef
 
 # --- Rules ---
-all: $(LIBFT) $(MLX) $(OBJ_DIR) $(NAME)
+all: $(LIBFT_LIB) $(MLX_LIB) $(OBJ_DIR) $(NAME)
+
+
+$(NAME): $(OBJ) $(MLX_LIB) $(LIBFT_LIB)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBS)
 	@printf "\r\033[K$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)FDF$(RESET)]: \tCompiled  ["
 	@printf "%*s" 20 "" | tr ' ' '='
 	@printf "] "
 	@printf "100%% "
-	@printf "$(GREEN)Complete!$(RESET)"
-	@printf "\n"
+	@printf "$(GREEN)Complete!$(RESET)\n"
 
-$(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBS)
-
-$(MLX):
+$(MLX_LIB):
 	@if [ ! -f $(MLX_LIB) ]; then \
 		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MLX$(RESET)]: \tDownloading...\n" && \
 		curl -o $(MLX_TGZ) $(MLX_URL) 2>/dev/null && \
@@ -92,21 +92,24 @@ $(MLX):
 		mv $(MLX_DIR)/libmlx.a $(LIB_DIR) && \
 		mv $(MLX_DIR)/mlx.h $(INC_DIR) && \
 		rm $(MLX_TGZ) && \
-		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MLX$(RESET)]: \tMLX $(GREEN)ready$(RESET)\n"; \
+		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MLX$(RESET)]: \tMLX $(GREEN)ready$(RESET)\n" && \
+		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)FDF$(RESET)]: \tFlags: $(GREY)$(CC) $(CFLAGS)$(RESET)\n"; \
 	else \
-		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MLX$(RESET)]: \tMLX $(GREEN)ready$(RESET)\n"; \
+		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MLX$(RESET)]: \tMLX $(GREEN)ready$(RESET)\n" && \
+		printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)FDF$(RESET)]: \tFlags: $(GREY)$(CC) $(CFLAGS)$(RESET)\n"; \
 	fi
 
-$(LIBFT):
+$(LIBFT_LIB):
 	@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tBuilding..."
 	@make -C $(LIBFT_DIR)
 	@mv $(LIBFT_DIR)/libft.a $(LIB_DIR)
 	@cp $(LIBFT_DIR)/inc/libft.h $(INC_DIR)
 	@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tLIBFT $(GREEN)ready$(RESET)\n"
 
-$(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADERS) $(MLX)
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADERS)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	$(call update_progress)
+
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)

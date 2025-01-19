@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 11:02:46 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/06 08:18:48 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:58:38 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_check_map(char *filename, t_map *map);
 t_point ft_projection(int x, int y, t_fdf *env);
 int		get_default_color(int z, t_map *map);
 int		ft_min(int a, int b);
-void	ft_return_error(char *err_msg, int system_function);
+void	ft_return_error(char *err_msg);
 void	get_z_min_max(t_map *map, int n);
 void	ft_put_pixel(t_fdf *env, int x, int y, int color);
 
