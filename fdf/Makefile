@@ -6,7 +6,7 @@
 #    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/04 01:24:15 by vnicoles          #+#    #+#              #
-#    Updated: 2025/01/04 03:19:16 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/01/20 11:43:23 by vnicoles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,7 +115,10 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 clean:
+	@rm -rf $(OBJ_DIR)
 	@rm -rf $(MLX_DIR)
+	@make -C $(LIBFT_DIR) clean
+
 	@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MLX$(RESET)]: \tCleaned\n"
 
 fclean: clean
