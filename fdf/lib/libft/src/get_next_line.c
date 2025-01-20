@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 17:51:56 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/12/27 21:05:44 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:42:26 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*ft_read_to_left_str(int fd, char *left_str)
 			return (NULL);
 		}
 		buff[rd_bytes] = '\0';
-		left_str = ft_strjoin(left_str, buff);
+		left_str = ft_strjoin_free(left_str, buff);
 	}
 	free(buff);
 	return (left_str);

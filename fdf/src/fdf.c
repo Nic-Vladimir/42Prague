@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 19:27:02 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/06 18:00:04 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:54:15 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static t_fdf	*fdf_init(char *filename)
 {
 	t_fdf	*env;
+	char	*window_title;
 
 	env = (t_fdf *)malloc(sizeof(t_fdf));
 	if (!env)
@@ -22,7 +23,9 @@ static t_fdf	*fdf_init(char *filename)
 	env->mlx = mlx_init();
 	if (!env->mlx)
 		ft_return_error("Error: mlx_init failed");
-	env->win = mlx_new_window(env->mlx, WIDTH, HEIGHT, ft_strjoin("FdF - ", filename));
+	window_title = ft_strjoin("FdF - ", filename);
+	env->win = mlx_new_window(env->mlx, WIDTH, HEIGHT, window_title);
+	free(window_title);
 	if (!env->win)
 		ft_return_error("Error: mlx_new_window failed");
 	env->img = mlx_new_image(env->mlx, WIDTH, HEIGHT);

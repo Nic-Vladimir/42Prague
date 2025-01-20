@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 01:04:14 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/06 08:15:38 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:11:30 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	ft_close_win(void *params)
 	env = (t_fdf *)params;
 	mlx_destroy_image(env->mlx, env->img);
 	mlx_destroy_window(env->mlx, env->win);
+	mlx_destroy_display(env->mlx);
 	free(env->camera);
 	y = -1;
 	while (++y < env->map->height)
