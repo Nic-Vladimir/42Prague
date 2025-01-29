@@ -6,11 +6,11 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:53:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/12/09 11:56:28 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:51:34 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../inc/fdf.h"
 
 float	ft_abs(float n)
 {
@@ -35,4 +35,3 @@ float	ft_rfpart(float n)
 {
 	return (1.f - ft_fpart(n));
 }
-

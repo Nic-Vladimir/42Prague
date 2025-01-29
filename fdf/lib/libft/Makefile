@@ -87,12 +87,6 @@ define update_progress
 endef
 
 all:		$(OBJ_DIR) $(NAME)
-		@printf "\r\\033[K$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tCompiled  ["
-		@printf "%*s" 20 "" | tr ' ' '='
-		@printf "] "
-		@printf "100%% "
-		@printf "$(GREEN)Complete!$(RESET)"
-		@printf "\n"
 
 $(OBJ_DIR):
 		@mkdir -p $(OBJ_DIR)
@@ -103,6 +97,13 @@ $(OBJ_DIR)%.o:$(SRC_DIR)%.c
 
 $(NAME):	$(OBJS) $(BOBJS)
 		@ar rcs $(NAME) $(OBJS) $(BOBJS)
+		@printf "\r\\033[K$(CLEAR)$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)LIBFT$(RESET)]: \tCompiled  ["
+		@printf "%*s" 20 "" | tr ' ' '='
+		@printf "] "
+		@printf "100%% "
+		@printf "$(GREEN)Complete!$(RESET)"
+		@printf "\n"
+
 
 clean:
 		@$(RM) $(OBJ_DIR)

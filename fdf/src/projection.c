@@ -6,11 +6,11 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 10:19:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/06 18:10:26 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:04:30 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../inc/fdf.h"
 
 static void	ft_rotate_x(int *y, int *z, double x_angle)
 {
@@ -40,27 +40,25 @@ static void	ft_rotate_z(int *x, int *y, double z_angle)
 	*y = prev.x * sin(z_angle) + prev.y * cos(z_angle);
 }
 
-int get_default_color(int z, t_map *map)
+int	get_default_color(int z, t_map *map)
 {
-    double percentage;
-    int color;
+	double	percentage;
+	int		color;
 
-    if (map->z_max == map->z_min)
-        return (0xFFFFFF);  // White color if all points are at the same height
-
-    percentage = (double)(z - map->z_min) / (map->z_max - map->z_min);
-    if (percentage < 0.2)
-        color = 0x0000FF;  // Blue for lowest points
-    else if (percentage < 0.4)
-        color = 0x00FF00;  // Green for low-mid points
-    else if (percentage < 0.6)
-        color = 0xFFFF00;  // Yellow for mid points
-    else if (percentage < 0.8)
-        color = 0xFFA500;  // Orange for mid-high points
-    else
-        color = 0xFF0000;  // Red for highest points
-
-    return (color);
+	if (map->z_max == map->z_min)
+		return (0xFFFFFF);
+	percentage = (double)(z - map->z_min) / (map->z_max - map->z_min);
+	if (percentage < 0.2)
+		color = 0x0000FF;
+	else if (percentage < 0.4)
+		color = 0x00FF00;
+	else if (percentage < 0.6)
+		color = 0xFFFF00;
+	else if (percentage < 0.8)
+		color = 0xFFA500;
+	else
+		color = 0xFF0000;
+	return (color);
 }
 
 t_point	ft_projection(int x, int y, t_fdf *env)
@@ -86,4 +84,3 @@ t_point	ft_projection(int x, int y, t_fdf *env)
 	point.reverse = 0;
 	return (point);
 }
-

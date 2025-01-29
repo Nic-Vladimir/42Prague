@@ -6,16 +6,15 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:24:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/06 17:58:18 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/21 20:59:38 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
-
+#include "../inc/fdf.h"
 
 void	ft_put_pixel(t_fdf *env, int x, int y, int color)
 {
-	int		i;
+	int	i;
 
 	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 	{
@@ -34,10 +33,11 @@ void	ft_get_z_min_max(t_map *map, int n)
 		map->z_min = n;
 }
 
-
-void	ft_return_error(char *err_msg)
+void	ft_return_error(char *err_msg, t_fdf *env)
 {
 	ft_printf("%s\n", err_msg);
+	if (env)
+		ft_close_win(env);
 	exit(-1);
 }
 
@@ -48,25 +48,14 @@ int	ft_min(int a, int b)
 	return (b);
 }
 
-/*
-int	get_default_color(int z, t_map *map)
+void	free_line(int fd)
 {
-	double			percent;
-	unsigned int	max;
+	char	*line;
 
-	max = map->z_max - map->z_min;
-	if (max == 0)
-		return (0x432371);
-	percent = ((double)(z - map->z_min) / max);
-	if (percent < 0.2)
-		return (0x432371);
-	else if (percent < 0.4)
-		return (0x714674);
-	else if (percent < 0.6)
-		return (0x9F6976);
-	else if (percent < 0.8)
-		return (0xCC8B79);
-	else
-		return (0xFAAE7B);
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		free(line);
+		line = get_next_line(fd);
+	}
 }
-*/

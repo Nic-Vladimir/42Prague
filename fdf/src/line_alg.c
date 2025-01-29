@@ -6,11 +6,11 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 11:31:32 by vnicoles          #+#    #+#             */
-/*   Updated: 2024/12/05 11:45:21 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:53:20 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../inc/fdf.h"
 
 static int	ft_lerp(int first, int second, double p)
 {
@@ -65,17 +65,17 @@ static void	ft_draw_line_loop(t_point s, t_point e, float gradient, t_fdf *env)
 	{
 		if (env->steep)
 		{
-			ft_put_pixel(env, ft_ipart(inter_y), x,
-				ft_get_color(x, s, e, ft_rfpart(inter_y)));
-			ft_put_pixel(env, ft_ipart(inter_y) + 1, x,
-				ft_get_color(x, s, e, ft_fpart(inter_y)));
+			ft_put_pixel(env, ft_ipart(inter_y), x, ft_get_color(x, s, e,
+					ft_rfpart(inter_y)));
+			ft_put_pixel(env, ft_ipart(inter_y) + 1, x, ft_get_color(x, s, e,
+					ft_fpart(inter_y)));
 		}
 		else
 		{
-			ft_put_pixel(env, x, ft_ipart(inter_y),
-				ft_get_color(x, s, e, ft_rfpart(inter_y)));
-			ft_put_pixel(env, x, ft_ipart(inter_y) + 1,
-				ft_get_color(x, s, e, ft_fpart(inter_y)));
+			ft_put_pixel(env, x, ft_ipart(inter_y), ft_get_color(x, s, e,
+					ft_rfpart(inter_y)));
+			ft_put_pixel(env, x, ft_ipart(inter_y) + 1, ft_get_color(x, s, e,
+					ft_fpart(inter_y)));
 		}
 		inter_y += gradient;
 		x++;
