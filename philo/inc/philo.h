@@ -25,8 +25,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#define EXPECTED_ARGS 5
-
 typedef struct s_philo {
   int id;
   pthread_t thread;
@@ -34,6 +32,8 @@ typedef struct s_philo {
   pthread_mutex_t *right_fork;
   uint64_t last_eaten;
   pthread_mutex_t last_eaten_mutex;
+  unsigned int times_eaten;
+  pthread_mutex_t times_eaten_mutex;
   struct s_philo_data *data;
 } t_philo;
 
@@ -42,6 +42,7 @@ typedef struct s_philo_data {
   unsigned int time_to_die;
   unsigned int time_to_eat;
   unsigned int time_to_sleep;
+  int num_meals;
   pthread_mutex_t *forks;
   t_philo *philos;
   pthread_mutex_t printf_mutex;

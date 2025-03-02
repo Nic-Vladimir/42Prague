@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
+#include <pthread.h>
 
 uint64_t get_current_time() {
     struct timespec ts;
@@ -45,41 +46,53 @@ void    *overseer(void *arg)
     uint64_t        delta_time;
     uint64_t        curr_time;
     unsigned int    i;
+    unsigned int    philos_have_eaten;
 
     data = (t_philo_data *)arg;
     i = 0;
     while (1)
     {
+        philos_have_eaten = 0;
         pthread_mutex_lock(&data->sim_end_mutex);
         if (data->sim_end) {
             pthread_mutex_unlock(&data->sim_end_mutex);
-            break; // Exit the overseer thread
+            return NULL; // Exit the overseer thread
         }
         pthread_mutex_unlock(&data->sim_end_mutex);
         while (i < data->num_philo)
         {
-            curr_time = get_current_time();
-            printf("\ncurrent time: %"PRIu64"\nlast spaghett: %"PRIu64"\n", curr_time, data->philos[i].last_eaten);
+            if (data->num_meals != -1 && data->philos[i].times_eaten >= (unsigned int)data->num_meals) {
+                philos_have_eaten++;
+                if (philos_have_eaten == data->num_philo) {
+                    curr_time = get_curr_sim_time(data);
+                    pthread_mutex_lock(&data->printf_mutex);
+                    printf("%"PRIu64" Philosophers ate %u times. End sim.\n", curr_time, data->num_meals);
+                    pthread_mutex_unlock(&data->printf_mutex);
+                    pthread_mutex_lock(&data->sim_end_mutex);
+                    data->sim_end = true;
+                    pthread_mutex_unlock(&data->sim_end_mutex);
+                }
+            }
+            curr_time = get_curr_sim_time(data);
             pthread_mutex_lock(&data->philos[i].last_eaten_mutex);
+            printf("\ncurrent time: %"PRIu64"\nlast spaghett of [%u]: %"PRIu64" starvation: %u \n", curr_time, i, curr_time-data->philos[i].last_eaten, data->time_to_die);
             delta_time = curr_time - data->philos[i].last_eaten;
             pthread_mutex_unlock(&data->philos[i].last_eaten_mutex);
-            if (delta_time > data->time_to_die * 1000)
+            if (delta_time > data->time_to_die)
             {
                 pthread_mutex_lock(&data->printf_mutex);
-                printf("%"PRIu64" Philos %u dieded\n", curr_time, data->philos[i].id);
+                printf("%"PRIu64" Philosopher [%u] dieded\n", curr_time, data->philos[i].id);
                 pthread_mutex_unlock(&data->printf_mutex);
                 pthread_mutex_lock(&data->sim_end_mutex);
                 data->sim_end = true;
                 pthread_mutex_unlock(&data->sim_end_mutex);
-                break;
                 return NULL;
             }
-            usleep(10000);
             i++;
         }
+        usleep(4000);
         i = 0;
     }
-    return NULL;
 }
 
 static void check_args(char **argv)
@@ -89,7 +102,7 @@ static void check_args(char **argv)
 
     j = 0;
     i = 1;
-    while(i < EXPECTED_ARGS)
+    while(argv[i] != NULL)
     {
         if (argv[i][0] == '0' && argv[i][1] != '\0')
             exit_with_error("No leading zeros allowed", 1);
@@ -120,6 +133,10 @@ static t_philo_data  *init_philo_data(char **argv)
     data->time_to_eat = ft_atoui(argv[3]);
     data->time_to_sleep = ft_atoui(argv[4]);
     data->sim_end = false;
+    if (argv[5] != NULL)
+        data->num_meals = ft_atoui(argv[5]);
+    else
+        data->num_meals = -1;
     pthread_mutex_init(&data->printf_mutex, NULL);
     data->forks = malloc(sizeof(pthread_mutex_t) * data->num_philo);
     while (i < data->num_philo)
@@ -136,7 +153,8 @@ static t_philo_data  *init_philo_data(char **argv)
         data->philos[i].left_fork = &data->forks[i];
         data->philos[i].right_fork = &data->forks[(i + 1) % data->num_philo];
         data->philos[i].data = data;
-        data->philos[i].last_eaten = data->start_time;
+        data->philos[i].last_eaten = 0;
+        data->philos[i].times_eaten = 0;
         pthread_mutex_init(&data->philos[i].last_eaten_mutex, NULL);
         i++;
     }
@@ -147,18 +165,27 @@ void    *philosopher_routine(void   *arg)
 {
     t_philo         *philo;
     t_philo_data    *data;
+    int             can_eat;
 
+    can_eat = 1;
     philo = (t_philo *)arg;
     data = philo->data;
     while (1)
     {
         // THINKING
         pthread_mutex_lock(&data->printf_mutex);
-        printf("%"PRIu64" %u is thinking\n", get_curr_sim_time(data), philo->id);
+        printf("%"PRIu64" Philosopher [%u] is thinking\n", get_curr_sim_time(data), philo->id);
         pthread_mutex_unlock(&data->printf_mutex);
-        usleep(5000);
         // EATING
-        if (philo->id % 2 == 0)
+        if (data->num_philo == 1)
+        {
+            pthread_mutex_lock(philo->right_fork);
+            pthread_mutex_lock(&data->printf_mutex);
+            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, philo->id);
+            pthread_mutex_unlock(&data->printf_mutex);
+            can_eat = 0;
+        }
+        else if (philo->id % 2 == 0)
         {
             pthread_mutex_lock(philo->right_fork);
             pthread_mutex_lock(philo->left_fork);
@@ -168,31 +195,42 @@ void    *philosopher_routine(void   *arg)
             pthread_mutex_lock(philo->left_fork);
             pthread_mutex_lock(philo->right_fork);
         }
-        pthread_mutex_lock(&data->printf_mutex);
-        printf("%"PRIu64" %u has taken forks %u and %u\n", get_curr_sim_time(data), philo->id, philo->id, (philo->id + 1));
-        printf("%"PRIu64" %u is eating\n", get_curr_sim_time(data), philo->id);
-        pthread_mutex_unlock(&data->printf_mutex);
-        pthread_mutex_lock(&philo->last_eaten_mutex);
-        philo->last_eaten = get_curr_sim_time(data);
-        pthread_mutex_unlock(&philo->last_eaten_mutex);
-        usleep(data->time_to_eat * 1000);
-        pthread_mutex_unlock(philo->left_fork);
-        pthread_mutex_unlock(philo->right_fork);
+        if (can_eat)
+        {
+            pthread_mutex_lock(&data->printf_mutex);
+            printf("%"PRIu64" Philosopher [%u] has taken forks %u and %u\n", get_curr_sim_time(data), philo->id, philo->id, (philo->id + 1));
+            printf("%"PRIu64" Philosopher [%u] is eating\n", get_curr_sim_time(data), philo->id);
+            pthread_mutex_unlock(&data->printf_mutex);
+            pthread_mutex_lock(&philo->last_eaten_mutex);
+            pthread_mutex_lock(&philo->times_eaten_mutex);
+            philo->last_eaten = get_curr_sim_time(data);
+            philo->times_eaten++;
+            pthread_mutex_unlock(&philo->times_eaten_mutex);
+            pthread_mutex_unlock(&philo->last_eaten_mutex);
+            usleep(data->time_to_eat * 1000);
+            pthread_mutex_unlock(philo->left_fork);
+            pthread_mutex_unlock(philo->right_fork);
+        }
+        else if (!can_eat)
+        {
+            pthread_mutex_unlock(philo->right_fork);
+            usleep(data->time_to_die * 2);
+            can_eat = 1;
+        }
         // SLEEPING
         pthread_mutex_lock(&data->printf_mutex);
-        printf("%"PRIu64" %u is sleeping\n", get_curr_sim_time(data), philo->id);
+        printf("%"PRIu64" Philosopher [%u] is sleeping\n", get_curr_sim_time(data), philo->id);
         pthread_mutex_unlock(&data->printf_mutex);
         usleep(data->time_to_sleep * 1000);
 
         pthread_mutex_lock(&data->sim_end_mutex);
         if (data->sim_end)
         {
-            pthread_mutex_lock(&data->sim_end_mutex);
-            break;
+            pthread_mutex_unlock(&data->sim_end_mutex);
+            return NULL;
         }
         pthread_mutex_unlock(&data->sim_end_mutex);
     }
-    return NULL;
 }
 
 int	main(int argc, char **argv)
@@ -202,8 +240,8 @@ int	main(int argc, char **argv)
     unsigned int    i;
 
     i = 0;
-    if (argc != 5)
-        return(write(1, "Usage: ./philo <num_philo> <time_to_die_ms> <time_to_eat_ms> <time_to_sleep_ms>\n", 80), 1);
+    if (argc != 5 && argc != 6)
+        return(write(1, "Usage: ./philo <num_philo> <time_to_die_ms> <time_to_eat_ms> <time_to_sleep_ms> [number_of_times_each_philosopher_must_eat]\n", 80), 1);
     check_args(argv);
     data = init_philo_data(argv);
     while (i < data->num_philo)
