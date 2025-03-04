@@ -6,7 +6,7 @@
 #    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/03 20:40:45 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/03/04 19:22:05 by vnicoles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,20 +24,23 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= minishell
-CC			= cc
+CC			= gcc -g
 CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 
 # --- Paths ---
-INC_DIR		= inc
-SRC_DIR		= src
-LIB_DIR		= lib
-OBJ_DIR		= obj
+INC_DIR		= inc/
+SRC_DIR		= src/
+LIB_DIR		= lib/
+OBJ_DIR		= obj/
 LIBFT_DIR	= $(LIB_DIR)/libft
 LIBFT		= $(LIB_DIR)/libft/libft.a
-SRC			= main.c
+SRC			= main.c \
+				ast.c \
+				arena.c \
+				tokenizer.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
-HEADERS		= $(INC_DIR)/minishell.h
+HEADERS		= $(INC_DIR)minishell.h
 
 # --- Progress bar ---
 TOTAL_FILES	= $(words $(SRC))
@@ -59,26 +62,33 @@ endef
 all:  $(OBJ_DIR) $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) -L $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) -lreadline
 	@printf "\r\033[K$(RESET)$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MINISHELL$(RESET)]: \tCompiled  ["
 	@printf "%*s" 20 "" | tr ' ' '='
 	@printf "] "
 	@printf "100%% "
 	@printf "$(GREEN)Complete!$(RESET)\n"
 
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADERS)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	$(call update_progress)
+
 $(LIBFT):
-	@MAKE -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@MAKE clean -C $(LIBFT_DIR) 
+	@make clean -C $(LIBFT_DIR)
+	
+	@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MINISHELL$(RESET)]: \tCleaned\n"
 
 fclean: clean
 	@rm $(NAME)
-	@MAKE fclean -C $(LIB_DIR)
+	@rm $(LIBFT)
+	@printf "$(GREEN)»$(RESET) [$(PURPLE)$(BOLD)MINISHELL$(RESET)]: \t$(GREEN)Full clean$(RESET)\n"
 
 re: fclean all
 

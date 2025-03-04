@@ -6,11 +6,12 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/04 16:36:38 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/04 19:23:01 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "../inc/ast.h"
 
 t_ast_node *ast_new_node(t_arena *arena, t_node_type type, char **args) {
 	t_ast_node	*node;

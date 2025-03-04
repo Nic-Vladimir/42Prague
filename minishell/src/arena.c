@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 15:19:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/04 15:48:50 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/04 20:04:56 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ static int	arena_expand(t_arena *arena) {
 void	*arena_malloc(t_arena *arena, size_t size) {
 	void	*ptr;
 
-	if (arena->used + size > arena->size)
-		if	(arena_expand(arena))
-			arena_malloc(arena, size);
+	while (arena->used + size > arena->size) {
+		if	(!arena_expand(arena))
+			return NULL;
+	}
 	ptr = arena->mem + arena->used;
 	arena->used += size;
 	return ptr;
