@@ -61,27 +61,33 @@ void    *overseer(void *arg)
         pthread_mutex_unlock(&data->sim_end_mutex);
         while (i < data->num_philo)
         {
-            if (data->num_meals != -1 && data->philos[i].times_eaten >= (unsigned int)data->num_meals) {
-                philos_have_eaten++;
-                if (philos_have_eaten == data->num_philo) {
-                    curr_time = get_curr_sim_time(data);
-                    pthread_mutex_lock(&data->printf_mutex);
-                    printf("%"PRIu64" Philosophers ate %u times. End sim.\n", curr_time, data->num_meals);
-                    pthread_mutex_unlock(&data->printf_mutex);
-                    pthread_mutex_lock(&data->sim_end_mutex);
-                    data->sim_end = true;
-                    pthread_mutex_unlock(&data->sim_end_mutex);
-                }
-            }
+            if (data->num_meals != -1)
+			{
+				pthread_mutex_lock(&data->philos[i].last_eaten_mutex);
+				if (data->philos[i].times_eaten >= (unsigned int)data->num_meals)
+					philos_have_eaten++;
+				pthread_mutex_unlock(&data->philos[i].last_eaten_mutex);
+				if (philos_have_eaten == data->num_philo)
+				{
+					curr_time = get_curr_sim_time(data);
+					pthread_mutex_lock(&data->printf_mutex);
+					printf("%"PRIu64" Philosophers ate %u times. End sim.\n", curr_time, data->num_meals);
+					pthread_mutex_unlock(&data->printf_mutex);
+					pthread_mutex_lock(&data->sim_end_mutex);
+					data->sim_end = true;
+					pthread_mutex_unlock(&data->sim_end_mutex);
+					return NULL;
+				}
+			}
             curr_time = get_curr_sim_time(data);
             pthread_mutex_lock(&data->philos[i].last_eaten_mutex);
-            printf("\ncurrent time: %"PRIu64"\nlast spaghett of [%u]: %"PRIu64" starvation: %u \n", curr_time, i, curr_time-data->philos[i].last_eaten, data->time_to_die);
+            //printf("\ncurrent time: %"PRIu64"\nlast spaghett of [%u]: %"PRIu64" starvation: %u \n", curr_time, i, curr_time-data->philos[i].last_eaten, data->time_to_die);
             delta_time = curr_time - data->philos[i].last_eaten;
             pthread_mutex_unlock(&data->philos[i].last_eaten_mutex);
             if (delta_time > data->time_to_die)
             {
                 pthread_mutex_lock(&data->printf_mutex);
-                printf("%"PRIu64" Philosopher [%u] dieded\n", curr_time, data->philos[i].id);
+                printf("%"PRIu64" philosopher [%u] dieded\n", curr_time, data->philos[i].id);
                 pthread_mutex_unlock(&data->printf_mutex);
                 pthread_mutex_lock(&data->sim_end_mutex);
                 data->sim_end = true;
@@ -161,68 +167,105 @@ static t_philo_data  *init_philo_data(char **argv)
     return (data);
 }
 
-void    *philosopher_routine(void   *arg)
+void *philosopher_routine(void *arg)
 {
     t_philo         *philo;
     t_philo_data    *data;
-    int             can_eat;
-
-    can_eat = 1;
     philo = (t_philo *)arg;
     data = philo->data;
+    
     while (1)
     {
         // THINKING
         pthread_mutex_lock(&data->printf_mutex);
         printf("%"PRIu64" Philosopher [%u] is thinking\n", get_curr_sim_time(data), philo->id);
         pthread_mutex_unlock(&data->printf_mutex);
+        
+        pthread_mutex_lock(&data->sim_end_mutex);
+        if (data->sim_end)
+        {
+            pthread_mutex_unlock(&data->sim_end_mutex);
+            return NULL;
+        }
+        pthread_mutex_unlock(&data->sim_end_mutex);
+        
         // EATING
+		usleep(random() % 1000); // Slight desynchronization
         if (data->num_philo == 1)
         {
             pthread_mutex_lock(philo->right_fork);
             pthread_mutex_lock(&data->printf_mutex);
-            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, philo->id);
+            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, (philo->id + 1) % data->num_philo);
             pthread_mutex_unlock(&data->printf_mutex);
-            can_eat = 0;
+            usleep(data->time_to_die * 1000 *2);
+            pthread_mutex_unlock(philo->right_fork);
+			pthread_mutex_lock(&data->sim_end_mutex);
+			if (data->sim_end)
+			{
+				pthread_mutex_unlock(&data->sim_end_mutex);
+				return NULL;
+			}
+			pthread_mutex_unlock(&data->sim_end_mutex);
         }
         else if (philo->id % 2 == 0)
         {
+            // Even philosophers try right fork first, then left
             pthread_mutex_lock(philo->right_fork);
+            pthread_mutex_lock(&data->printf_mutex);
+            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, (philo->id + 1) % data->num_philo);
+            pthread_mutex_unlock(&data->printf_mutex);
+
             pthread_mutex_lock(philo->left_fork);
+            pthread_mutex_lock(&data->printf_mutex);
+            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, philo->id);
+            pthread_mutex_unlock(&data->printf_mutex);
         }
         else
         {
+            // Odd philosophers try left fork first, then right
             pthread_mutex_lock(philo->left_fork);
-            pthread_mutex_lock(philo->right_fork);
-        }
-        if (can_eat)
-        {
             pthread_mutex_lock(&data->printf_mutex);
-            printf("%"PRIu64" Philosopher [%u] has taken forks %u and %u\n", get_curr_sim_time(data), philo->id, philo->id, (philo->id + 1));
-            printf("%"PRIu64" Philosopher [%u] is eating\n", get_curr_sim_time(data), philo->id);
+            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, philo->id);
             pthread_mutex_unlock(&data->printf_mutex);
-            pthread_mutex_lock(&philo->last_eaten_mutex);
-            pthread_mutex_lock(&philo->times_eaten_mutex);
-            philo->last_eaten = get_curr_sim_time(data);
-            philo->times_eaten++;
-            pthread_mutex_unlock(&philo->times_eaten_mutex);
-            pthread_mutex_unlock(&philo->last_eaten_mutex);
-            usleep(data->time_to_eat * 1000);
-            pthread_mutex_unlock(philo->left_fork);
-            pthread_mutex_unlock(philo->right_fork);
+            
+            pthread_mutex_lock(philo->right_fork);
+            pthread_mutex_lock(&data->printf_mutex);
+            printf("%"PRIu64" Philosopher [%u] has taken a fork %u\n", get_curr_sim_time(data), philo->id, (philo->id + 1) % data->num_philo);
+            pthread_mutex_unlock(&data->printf_mutex);
         }
-        else if (!can_eat)
+        
+        // Now the philosopher has both forks
+        pthread_mutex_lock(&data->printf_mutex);
+        printf("%"PRIu64" Philosopher [%u] is eating\n", get_curr_sim_time(data), philo->id);
+        pthread_mutex_unlock(&data->printf_mutex);
+        
+        usleep(data->time_to_eat * 1000);
+        
+        pthread_mutex_lock(&philo->last_eaten_mutex);
+        pthread_mutex_lock(&philo->times_eaten_mutex);
+        philo->last_eaten = get_curr_sim_time(data);
+        philo->times_eaten++;
+        pthread_mutex_unlock(&philo->times_eaten_mutex);
+        pthread_mutex_unlock(&philo->last_eaten_mutex);
+        
+        pthread_mutex_unlock(philo->left_fork);
+        pthread_mutex_unlock(philo->right_fork);
+        
+        pthread_mutex_lock(&data->sim_end_mutex);
+        if (data->sim_end)
         {
-            pthread_mutex_unlock(philo->right_fork);
-            usleep(data->time_to_die * 2);
-            can_eat = 1;
+            pthread_mutex_unlock(&data->sim_end_mutex);
+            return NULL;
         }
+        pthread_mutex_unlock(&data->sim_end_mutex);
+        
         // SLEEPING
         pthread_mutex_lock(&data->printf_mutex);
         printf("%"PRIu64" Philosopher [%u] is sleeping\n", get_curr_sim_time(data), philo->id);
         pthread_mutex_unlock(&data->printf_mutex);
+        
         usleep(data->time_to_sleep * 1000);
-
+        
         pthread_mutex_lock(&data->sim_end_mutex);
         if (data->sim_end)
         {
