@@ -41,8 +41,10 @@ int	main(void) {
 		input = readline("minishell> ");
 		if (!input)
 			continue;
-		if (strcmp(input, "exit") == 0)
+		if (strcmp(input, "exit") == 0) {
+            free(input);
 			break;
+        }
 		if (*input)
 			add_history(input);
 
@@ -50,6 +52,8 @@ int	main(void) {
 		print_tokens(&tok_data);
 		free(input);
 	}
+    rl_clear_history();
+    rl_cleanup_after_signal();
 	arena_free(arena);
 	return 0;
 }
