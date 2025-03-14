@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast.h                                              :+:      :+:    :+:   */
+/*   arena.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/04 17:35:58 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/10 08:46:44 by vnicoles         ###   ########.fr       */
+/*   Created: 2025/03/10 08:45:18 by vnicoles          #+#    #+#             */
+/*   Updated: 2025/03/10 08:52:27 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AST_H
-# define AST_H
+#ifndef ARENA_H
+# define ARENA_H
 
-typedef enum e_node_type {
-	NODE_CMD,
-	NODE_PIPE,
-	NODE_REDIR_IN,
-	NODE_REDIR_OUT,
-	NODE_REDIR_APPEND,
-	NODE_HEREDOC,
-	NODE_AND,
-	NODE_OR,
-	NODE_GROUP,
-} t_node_type;
+# include <stddef.h>
 
-typedef struct s_ast_node {
-	t_node_type type;
-	char **args;
-	struct s_ast_node *left;
-	struct s_ast_node *right;
-} t_ast_node;
-
+typedef struct s_arena {
+	char	*mem;
+	size_t	size;
+	size_t	used;
+} t_arena;
 
 #endif

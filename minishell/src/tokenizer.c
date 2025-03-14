@@ -13,6 +13,8 @@
 #include "../inc/tokenizer.h"
 #include "../inc/minishell.h"
 
+//TODO: Add recognition of '(', ')', '||', '&&'
+
 static t_token	*new_token(t_tokenizer_data *tok_data, t_token_type type, char *value, size_t len) {
 	t_token *token;
 
@@ -56,8 +58,20 @@ static char *process_word_token(t_tokenizer_data *tok_data, char *input) {
 
 t_token	*tokenize(t_tokenizer_data *tok_data, char *input) {
 	while (*input) {
-		if (*input == '|')
-			add_token(tok_data, TOK_PIPE, "|", 1);
+		if (*input == '|') {
+			if (*(input + 1) == '|') {
+				add_token(tok_data, TOK_OR, "||", 2);
+				input++;
+			} else
+				add_token(tok_data, TOK_PIPE, "|", 1);
+		}
+		else if (*input == '&') {
+			if (*(input + 1) == '&') {
+				add_token(tok_data, TOK_AND, "&&", 2);
+				input++;
+			} else
+				add_token(tok_data, TOK_AND, "&", 1);
+		}
 		else if (*input == '<') {
 			if (*(input + 1) == '<') {
 				add_token(tok_data, TOK_HEREDOC, "<<", 2);
@@ -72,6 +86,10 @@ t_token	*tokenize(t_tokenizer_data *tok_data, char *input) {
 			} else
 				add_token(tok_data, TOK_REDIR_OUT, ">", 1);
 		}
+		else if (*input == '(')
+			add_token(tok_data, TOK_GROUP_OPEN, "(", 1);
+		else if (*input == ')')
+			add_token(tok_data, TOK_GROUP_CLOSE, ")", 1);
 		else if (!isspace(*input)) {
 			input = process_word_token(tok_data, input);
 			continue;

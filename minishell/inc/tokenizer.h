@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:33:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/04 19:21:26 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/10 08:46:33 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define TOKENIZER_H
 
 //TODO: Learn about multiple header inclusions
-#include "minishell.h"
 
+#include "arena.h"
 typedef enum e_token_type {
     TOK_CMD,
     TOK_PIPE,
@@ -25,7 +25,8 @@ typedef enum e_token_type {
     TOK_HEREDOC,
     TOK_AND,
     TOK_OR,
-    TOK_GROUP,
+    TOK_GROUP_OPEN,
+    TOK_GROUP_CLOSE,
     TOK_WORD,
     TOK_EOF,
 } t_token_type;
@@ -42,6 +43,5 @@ typedef struct s_tokenizer_data {
 	t_token *tail;
 } t_tokenizer_data;
 
-t_token *tokenize(t_tokenizer_data *data, char *input);
 
 #endif

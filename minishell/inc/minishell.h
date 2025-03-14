@@ -6,32 +6,35 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/04 17:37:00 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:56:17 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "arena.h"
+# include "ast.h"
+# include "tokenizer.h"
+# include "env_var.h"
+
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/wait.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef struct s_arena {
-	char	*mem;
-	size_t	size;
-	size_t	used;
-} t_arena;
-
-t_arena	*arena_init(size_t size);
-void	*arena_malloc(t_arena *arena, size_t size);
-void	arena_reset(t_arena *arena);
-void	arena_free(t_arena *arena);
+t_arena		*arena_init(size_t size);
+void		*arena_malloc(t_arena *arena, size_t size);
+void		arena_reset(t_arena *arena);
+void		arena_free(t_arena *arena);
+t_token 	*tokenize(t_tokenizer_data *data, char *input);
+t_ast_node	*parse(t_tokenizer_data *data);
+void		debug_ast(t_ast_node *root);
 
 
 #endif
-
 

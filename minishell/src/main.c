@@ -6,12 +6,13 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/04 19:42:35 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/14 00:52:35 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 #include "../inc/tokenizer.h"
+#include "../inc/ast.h"
 #include <readline/history.h>
 
 static t_tokenizer_data init_tok_data(t_arena *arena) {
@@ -34,6 +35,8 @@ int	main(void) {
 	char				*input;
 	t_arena				*arena;
 	t_tokenizer_data	tok_data;
+	t_ast_node			*root;
+	//int					status;
 
 	arena = arena_init(64 * 1024);
 	tok_data = init_tok_data(arena);
@@ -49,7 +52,11 @@ int	main(void) {
 			add_history(input);
 
 		tok_data.tokens = tokenize(&tok_data, input);
+		root = parse(&tok_data);
 		print_tokens(&tok_data);
+		debug_ast(root);
+		//status = execute_ast(root);
+		//printf("Command return value: %d\n", status);
 		free(input);
 	}
     rl_clear_history();
