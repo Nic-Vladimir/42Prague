@@ -43,5 +43,4 @@ typedef struct s_tokenizer_data {
 	t_token *tail;
 } t_tokenizer_data;
 
-
 #endif

@@ -6,7 +6,7 @@
 #    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/04 19:22:05 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/03/18 22:47:14 by vnicoles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,10 @@ LIBFT		= $(LIB_DIR)/libft/libft.a
 SRC			= main.c \
 				ast.c \
 				arena.c \
-				tokenizer.c
+				tokenizer.c \
+				env.c \
+				hashmap.c \
+				exec_engine.c \
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

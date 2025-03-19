@@ -6,14 +6,13 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:40:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/04 20:15:01 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/18 20:14:44 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/tokenizer.h"
 #include "../inc/minishell.h"
 
-//TODO: Add recognition of '(', ')', '||', '&&'
 
 static t_token	*new_token(t_tokenizer_data *tok_data, t_token_type type, char *value, size_t len) {
 	t_token *token;
@@ -50,7 +49,7 @@ static char *process_word_token(t_tokenizer_data *tok_data, char *input) {
     char *start;
 
 	start = input;
-    while (*input && !isspace(*input) && *input != '|' && *input != '<' && *input != '>')
+    while (*input && !isspace(*input) && *input != '|' && *input != '<' && *input != '>' && *input != ')')
         input++;
     add_token(tok_data, TOK_WORD, start, input - start);
     return input;
