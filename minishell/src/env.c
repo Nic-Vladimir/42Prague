@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 19:51:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/18 22:39:23 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/20 02:03:16 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,67 +98,27 @@ char *find_executable(t_env *env, const char *command) {
     char *path_copy = strdup(path_env);
     if (!path_copy)
         return NULL;
-    
+
     // Tokenize PATH by ':'
     char *dir;
     char *path_ptr = path_copy;
     char *saveptr;
-    
     while ((dir = strtok_r(path_ptr, ":", &saveptr)) != NULL) {
         path_ptr = NULL; // For subsequent calls
-        
         // Construct full path: dir + '/' + command
         size_t path_len = strlen(dir) + strlen(command) + 2; // +2 for '/' and null terminator
         char *full_path = malloc(path_len);
         if (!full_path)
             continue;
-        
         snprintf(full_path, path_len, "%s/%s", dir, command);
-        
         // Check if file exists and is executable
         if (access(full_path, X_OK) == 0) {
             free(path_copy);
             return full_path;
         }
-        
         free(full_path);
     }
-    
     free(path_copy);
     return NULL;
 }
-/*
-char *find_executable(t_env *env, const char *command) {
-    // If command contains '/', treat it as a full path
-    if (strchr(command, '/')) {
-        char *result = strdup(command);
-        if (!result) {
-            perror("strdup failed");
-            return NULL;
-        }
-        if (access(result, X_OK) == 0) {
-            return result;
-        }
-        free(result);
-        return NULL;
-    }
 
-    // Construct path using /bin/ as the standard location
-    const char *standard_dir = "/bin";
-    size_t path_len = strlen(standard_dir) + strlen(command) + 2; // +2 for '/' and '\0'
-    char *full_path = (char *)arena_malloc(env->arena, path_len);
-    if (!full_path) {
-        perror("malloc failed");
-        return NULL;
-    }
-
-    snprintf(full_path, path_len, "%s/%s", standard_dir, command);
-
-    // Check if file exists and is executable in /bin/
-    if (access(full_path, X_OK) == 0) {
-        return full_path;
-    }
-
-    return NULL;
-}
-*/

@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/18 22:46:37 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/20 04:50:20 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,27 @@ int execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_logical_op(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd);
+
+int execute_node_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+{
+    int     i;
+    char    *env_value;
+    size_t  env_value_len;
+
+    i = 1;
+    while (node->args[i] != NULL)
+    {
+        if (node->args[i][0] == '$')
+        {
+            env_value = get_env_value(env, &node->args[i][1]);
+            env_value_len = ft_strlen(env_value) + 1;
+            node->args[i] = (char *)arena_malloc(env->arena, env_value_len);
+            ft_strlcpy(node->args[i], env_value, env_value_len);
+        }
+        i++;
+    }
+    return (execute_node(env, node, in_fd, out_fd));
+}
 
 int execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
     if (!node)
@@ -74,8 +95,6 @@ int execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 		execve(exec_path, node->args, envp);
 		fprintf(stderr, "Command not found: %s\n", node->args[0]);
 		exit(127);
-	} else {
-		wait(NULL);
 	}
     int status;
     waitpid(pid, &status, 0);
@@ -158,6 +177,6 @@ int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 
 int execute_ast(t_env *env, t_ast_node *root) {
 
-	return execute_node(env, root, STDIN_FILENO, STDOUT_FILENO);
+	return execute_node_filter(env, root, STDIN_FILENO, STDOUT_FILENO);
 }
 

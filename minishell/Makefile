@@ -6,7 +6,7 @@
 #    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/18 22:47:14 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/03/20 02:05:38 by vnicoles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRC			= main.c \
 				env.c \
 				hashmap.c \
 				exec_engine.c \
+				prompt.c \
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

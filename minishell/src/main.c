@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/18 22:10:07 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/20 03:43:39 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	main(int argc, char **argv, char **envp) {
 	t_ast_node			*root;
 	int					status;
 	t_env				*env;
+    char                *prompt;
 
 	(void)argc;
 	(void)argv;
@@ -40,7 +41,8 @@ int	main(int argc, char **argv, char **envp) {
 	//env_list = create_env_list();
 	env = init_env(arena, envp);
 	while (1) {
-		input = readline("minishell> ");
+        prompt = get_prompt(env);
+		input = readline(prompt);
 		if (!input)
 			continue;
 		if (strcmp(input, "exit") == 0) {
@@ -55,6 +57,7 @@ int	main(int argc, char **argv, char **envp) {
 		//debug_ast(root);
 		//print_tokens(env->tokenizer);
 		status = execute_ast(env, root);
+        env->last_exit_code = status;
 		printf("Command return value: %d\n", status);
 		free(input);
 	}
