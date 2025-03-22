@@ -28,11 +28,11 @@ static void print_tokens(t_tokenizer_data *tok_data) {
 */
 
 int	main(int argc, char **argv, char **envp) {
-	char				*input;
-	t_arena				*arena;
-	t_ast_node			*root;
-	int					status;
-	t_env				*env;
+	char                *input;
+    t_arena             *arena;
+	t_ast_node          *root;
+	int                 status;
+	t_env               *env;
     char                *prompt;
 
 	(void)argc;

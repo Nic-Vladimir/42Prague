@@ -24,17 +24,42 @@ int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_logical_op(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 
-int execute_node_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int execute_command_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
     int     i;
     char    *env_value;
     size_t  env_value_len;
 
+    printf("Node type: %d\n", node->type);
+    printf("Node args: %p\n", (void*)node->args);
+    if (node->args) {
+        for (int j = 0; node->args[j] != NULL; j++) {
+            printf("Args[%d]: %s\n", j, node->args[j]);
+        }
+    }
     i = 1;
     while (node->args[i] != NULL)
     {
         if (node->args[i][0] == '$')
         {
+            if (node->args[i][1] == '?' && node->args[i][2] == '\0')
+            {
+                env_value = ft_itoa(env->last_exit_code);
+                env_value_len = ft_strlen(env_value) + 1;
+                node->args[i] = (char *)arena_malloc(env->arena, env_value_len);
+                ft_strlcpy(node->args[i], env_value, env_value_len);
+                i++;
+                continue;
+            }
+            else if (node->args[i][1] == '$' && node->args[i][2] == '\0')
+            {
+                env_value = ft_itoa(env->shell_pid);
+                env_value_len = ft_strlen(env_value) + 1;
+                node->args[i] = (char *)arena_malloc(env->arena, env_value_len);
+                ft_strlcpy(node->args[i], env_value, env_value_len);
+                i++;
+                continue;
+            }
             env_value = get_env_value(env, &node->args[i][1]);
             env_value_len = ft_strlen(env_value) + 1;
             node->args[i] = (char *)arena_malloc(env->arena, env_value_len);
@@ -42,7 +67,7 @@ int execute_node_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd)
         }
         i++;
     }
-    return (execute_node(env, node, in_fd, out_fd));
+    return (execute_command(env, node, in_fd, out_fd));
 }
 
 int execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
@@ -50,7 +75,7 @@ int execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
         return 0;
     switch (node->type) {
         case NODE_CMD:
-            return execute_command(env, node, in_fd, out_fd);
+            return execute_command_filter(env, node, in_fd, out_fd);
         case NODE_PIPE:
             return execute_pipeline(env, node, in_fd, out_fd);
         case NODE_REDIR_IN:
@@ -177,6 +202,6 @@ int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 
 int execute_ast(t_env *env, t_ast_node *root) {
 
-	return execute_node_filter(env, root, STDIN_FILENO, STDOUT_FILENO);
+	return execute_node(env, root, STDIN_FILENO, STDOUT_FILENO);
 }
 
